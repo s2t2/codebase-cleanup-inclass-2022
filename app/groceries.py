@@ -5,6 +5,9 @@
 #products_df = read_csv(products_filepath)
 #products = products_df.to_dict("records")
 
+
+from app.utils import to_usd
+
 import os
 
 # checks to see if a products.csv file exists. If not, it uses the default
@@ -33,7 +36,7 @@ print("THERE ARE", len(products), "PRODUCTS:")
 print("---------")
 
 for p in products:
-    print("..." + p["name"] + "   " + '${:,.2f}'.format(p["price"]))
+    print("..." + p["name"] + "   " + to_usd(p["price"]))
 
 
 all_prices = []
@@ -44,7 +47,7 @@ import statistics
 avg_price = statistics.median(all_prices)
 
 print("---------")
-print("AVERAGE PRICE:", '${:,.2f}'.format(avg_price))
+print("AVERAGE PRICE:", to_usd(avg_price))
 
 
 
