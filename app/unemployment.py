@@ -18,7 +18,14 @@ def fetch_unemployment_data():
     response = requests.get(url)
     parsed_response = json.loads(response.text)
     #print(parsed_response)
-    return parsed_response["data"]
+    #return parsed_response["data"]
+
+    # handle rate limits where the expected structure is not there
+    # can use try/except block, or conditional to check if "data" in list(parsed_response.keys())
+    try:
+        return parsed_response["data"]
+    except:
+        return None
 
 
 
