@@ -1,16 +1,22 @@
 
-# see also: https://github.com/prof-rossetti/codebase-cleanup-2021/pull/5/files
+# see also:
+#  + https://github.com/prof-rossetti/codebase-cleanup-2021/pull/5/files
+#  + https://github.com/prof-rossetti/intro-to-python/blob/e52b83da873584215d22e759b71b4fdf6b9cc9f2/notes/devtools/travis-ci.md
+#  + https://github.com/prof-rossetti/intro-to-python/issues/103
 
-from app.unemployment import fetch_unemployment_data, ALPHAVANTAGE_API_KEY
-
+import os
 import pytest
 import requests_mock
+
+
+from app.unemployment import fetch_unemployment_data, ALPHAVANTAGE_API_KEY
 
 
 #
 # INTEGRATION TESTS (END TO END, may need to be skipped on CI)
 #
 
+@pytest.mark.skipif(os.getenv("CI")=="true", reason="avoid issuing HTTP requests on the CI server") # skips this test on CI
 def test_fetch_data():
 
     data = fetch_unemployment_data()
@@ -77,6 +83,7 @@ def test_fetch_data_using_mock_responses():
     # this is the real URL that gets requested
     request_url = f"https://www.alphavantage.co/query?function=UNEMPLOYMENT&apikey={ALPHAVANTAGE_API_KEY}"
 
+
     # TEST 1
     # the function should work as expected when the request is successful:
     with requests_mock.mock() as mocker:
@@ -92,6 +99,7 @@ def test_fetch_data_using_mock_responses():
 
         latest_month = data[0]
         assert latest_month == {'date': '2022-02-01', 'value': '3.8'}
+
 
     # TEST 2
     # the function should fail gracefully when encountering a rate limit error:
